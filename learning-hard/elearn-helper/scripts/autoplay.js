@@ -250,8 +250,21 @@
     panel.setStatus('播放中...');
     LOG('video.play() 成功');
   } catch (e) {
-    panel.setStatus('⚠️ 自動播放被擋，請手動點擊播放');
-    LOG_W('video.play() 被擋：', e.message);
+    // Chrome autoplay policy：先靜音播放，成功後立刻恢復音量
+    LOG_W('video.play() 被擋，嘗試靜音播放：', e.message);
+    try {
+      const prevMuted = video.muted;
+      const prevVolume = video.volume;
+      video.muted = true;
+      await video.play();
+      video.muted = prevMuted;
+      video.volume = prevVolume;
+      panel.setStatus('播放中...');
+      LOG('靜音播放成功，已恢復音量');
+    } catch (e2) {
+      panel.setStatus('⚠️ 自動播放被擋，請手動點擊播放');
+      LOG_W('靜音播放仍失敗：', e2.message);
+    }
   }
 
   await waitForEnd(video, panel);
