@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eLearning Helper</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 280px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      padding: 16px;
+    }
+
+    h1 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #a78bfa;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 12px 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: left;
+      margin-bottom: 10px;
+    }
+
+    .btn:last-child {
+      margin-bottom: 0;
+    }
+
+    .btn-popup {
+      background: #16213e;
+      color: #60a5fa;
+      border: 1px solid #1e3a5f;
+    }
+
+    .btn-popup:hover {
+      background: #1e3a5f;
+      border-color: #60a5fa;
+    }
+
+    .btn-popup.active {
+      background: #1e3a5f;
+      border-color: #60a5fa;
+      color: #93c5fd;
+    }
+
+    .btn-autoplay {
+      background: #16213e;
+      color: #34d399;
+      border: 1px solid #064e3b;
+    }
+
+    .btn-autoplay:hover {
+      background: #064e3b;
+      border-color: #34d399;
+    }
+
+    .btn-autoplay.active {
+      background: #064e3b;
+      border-color: #34d399;
+      color: #6ee7b7;
+    }
+
+    .icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .btn-label {
+      flex: 1;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4b5563;
+      flex-shrink: 0;
+    }
+
+    .status-dot.on {
+      background: #10b981;
+      box-shadow: 0 0 6px #10b981;
+    }
+
+    .divider {
+      height: 1px;
+      background: #2d2d4e;
+      margin: 12px 0;
+    }
+
+    #status-msg {
+      font-size: 11px;
+      color: #6b7280;
+      text-align: center;
+      min-height: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>eLearning Helper</h1>
+
+  <button id="btn-popup" class="btn btn-popup">
+    <span class="icon">🔗</span>
+    <span class="btn-label">攔截彈出視窗 → 新分頁</span>
+    <span class="status-dot" id="dot-popup"></span>
+  </button>
+
+  <button id="btn-autoplay" class="btn btn-autoplay">
+    <span class="icon">▶️</span>
+    <span class="btn-label">自動連續播放影片</span>
+    <span class="status-dot" id="dot-autoplay"></span>
+  </button>
+
+  <div class="divider"></div>
+  <div id="status-msg">點擊按鈕以啟用功能</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
