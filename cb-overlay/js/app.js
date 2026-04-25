@@ -25,6 +25,7 @@ const App = (() => {
     error: null,
     sessionOk: false,
     sessionChecking: false,
+    sessionExpired: false,
     viewMode: 'table',
     filterOpen: false,
     nameSearch: '',
@@ -278,8 +279,17 @@ const App = (() => {
       state.sessionOk       ? 'tb-session-ok' :
                                'tb-session-err'
     );
-    textEl.textContent = state.sessionChecking ? '確認登入狀態' : state.sessionOk ? '已登入' : '未登入';
-    loginBtn.style.display = (!state.sessionChecking && !state.sessionOk) ? '' : 'none';
+    textEl.textContent = state.sessionChecking
+      ? '確認登入狀態'
+      : state.sessionOk
+      ? '已登入'
+      : state.sessionExpired ? '已登出' : '未登入';
+    if (!state.sessionChecking && !state.sessionOk) {
+      loginBtn.style.display = '';
+      loginBtn.textContent = state.sessionExpired ? '重新整理站台' : '前往登入';
+    } else {
+      loginBtn.style.display = 'none';
+    }
 
     // Search button
     $('btn-search').disabled = state.loading || !state.sessionOk;
@@ -991,14 +1001,19 @@ const App = (() => {
 
       setState({ rooms, searchDate, csrf, loading: false });
     } catch (err) {
+      const isExpired = err.message === 'SESSION_EXPIRED'
+        || err.message === 'NO_CSRF'
+        || /roomRecordSearch 失敗: 5\d\d/.test(err.message);
       const msg = err.message === 'NO_BRIDGE_TAB'
         ? '請先開啟原站台 booking.cathayholdings.com 並登入'
-        : err.message === 'SESSION_EXPIRED'
-        ? 'Session 已過期，請重新整理原站台 booking.cathayholdings.com 並重新登入'
-        : err.message === 'NO_CSRF' || /roomRecordSearch 失敗: 500/.test(err.message)
-        ? '連線可能已逾時，請重新整理原站台 booking.cathayholdings.com（必要時重新登入）後再試'
+        : isExpired
+        ? '登入狀態已過期，請點選「重新整理站台」後再次搜尋'
         : `查詢失敗：${err.message}`;
-      setState({ loading: false, error: msg });
+      setState({
+        loading: false,
+        error: msg,
+        ...(isExpired ? { sessionOk: false, sessionExpired: true } : {}),
+      });
     }
   }
 
@@ -1068,7 +1083,7 @@ const App = (() => {
       const result = await CbApi.checkSession();
       if (result.ok && result.loggedIn) {
         populateBuildings(result.buildings);
-        setState({ sessionChecking: false, sessionOk: true, error: null });
+        setState({ sessionChecking: false, sessionOk: true, sessionExpired: false, error: null });
       } else {
         setState({ sessionChecking: false, sessionOk: false, error: '請先開啟原站台並登入' });
       }
@@ -1293,7 +1308,13 @@ const App = (() => {
     $('btn-search').addEventListener('click', handleSearch);
     $('btn-check-session').addEventListener('click', checkSession);
 
-    $('btn-login').addEventListener('click', () => CbApi.closeOverlay());
+    $('btn-login').addEventListener('click', () => {
+      if (state.sessionExpired) {
+        CbApi.reloadHost();
+      } else {
+        CbApi.closeOverlay();
+      }
+    });
 
     // View toggle
     $('btn-view-card').addEventListener('click', () => {
