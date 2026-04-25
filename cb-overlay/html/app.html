@@ -7,209 +7,291 @@
   <link rel="stylesheet" href="../css/app.css" />
 </head>
 <body>
-  <div id="app">
+<div id="app">
 
-    <!-- Header -->
-    <header class="top-bar">
-      <h1 class="logo">CB 會議室</h1>
-      <div class="session-row">
-        <span id="session-status" class="badge badge-err">檢查中…</span>
-        <button id="btn-login" class="btn-ghost" style="display:none">前往登入</button>
-        <button id="btn-check-session" class="btn-ghost">重新檢查</button>
+  <!-- ── Sticky Toolbar (56px) ──────────────────────────────────────────────── -->
+  <header class="toolbar">
+
+    <div class="tb-left">
+
+      <!-- Logo -->
+      <div class="tb-logo">
+        <div class="tb-logo-icon">CB</div>
+        <span class="tb-logo-text">會議室</span>
       </div>
-    </header>
 
-    <!-- Search Panel -->
-    <section class="search-panel">
-      <div class="search-row">
-        <div class="field-group">
-          <span class="field-label">日期</span>
-          <div class="date-row">
-            <div class="cal-wrap" id="cal-wrap">
-              <button class="cal-trigger" id="cal-trigger" type="button">
-                <span id="cal-display">—</span>
-                <span id="cal-dow" class="cal-dow"></span>
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1" y="2" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M1 6h14M5 1v2M11 1v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              </button>
-              <div class="cal-popup" id="cal-popup" style="display:none">
-                <div class="cal-nav">
-                  <button class="cal-nav-btn" id="cal-prev" type="button">‹</button>
-                  <span class="cal-month-label" id="cal-month-label"></span>
-                  <button class="cal-nav-btn" id="cal-next" type="button">›</button>
-                </div>
-                <div class="cal-weekdays">
-                  <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
-                </div>
-                <div class="cal-days" id="cal-days"></div>
-                <div class="cal-footer">
-                  <div class="cal-legend">
-                    <span class="cal-legend-item"><span class="cal-legend-dot cal-legend-holiday"></span>國定假日</span>
-                  </div>
-                  <div class="cal-holiday-import">
-                    <input id="holiday-file-input" type="file" accept=".csv" style="display:none">
-                    <button class="holiday-import-btn" id="btn-load-builtin-holidays" type="button">載入 115 年</button>
-                    <button class="holiday-import-btn" id="btn-import-holidays" type="button">匯入 CSV</button>
-                    <button class="holiday-import-btn holiday-clear-btn" id="btn-clear-holidays" type="button">清除</button>
-                  </div>
-                  <span id="holiday-import-status" class="holiday-import-status"></span>
-                </div>
+      <div class="tb-divider"></div>
+
+      <!-- Date + quick shortcuts -->
+      <div class="tb-date-group">
+        <div class="cal-wrap" id="cal-wrap">
+          <button class="tb-date-btn cal-trigger" id="cal-trigger" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <path d="M16 2v4M8 2v4M3 10h18"/>
+            </svg>
+            <span id="cal-display">—</span>
+            <span id="cal-dow" class="tb-dow"></span>
+          </button>
+          <!-- Calendar popup -->
+          <div class="cal-popup" id="cal-popup" style="display:none">
+            <div class="cal-nav">
+              <button class="cal-nav-btn" id="cal-prev" type="button">‹</button>
+              <span class="cal-month-label" id="cal-month-label"></span>
+              <button class="cal-nav-btn" id="cal-next" type="button">›</button>
+            </div>
+            <div class="cal-weekdays">
+              <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+            </div>
+            <div class="cal-days" id="cal-days"></div>
+            <div class="cal-footer">
+              <div class="cal-legend">
+                <span class="cal-legend-item">
+                  <span class="cal-legend-dot cal-legend-holiday"></span>國定假日
+                </span>
               </div>
+              <div class="cal-holiday-import">
+                <input id="holiday-file-input" type="file" accept=".csv" style="display:none">
+                <button class="holiday-import-btn" id="btn-load-builtin-holidays" type="button">載入 115 年</button>
+                <button class="holiday-import-btn" id="btn-import-holidays" type="button">匯入 CSV</button>
+                <button class="holiday-import-btn holiday-clear-btn" id="btn-clear-holidays" type="button">清除</button>
+              </div>
+              <span id="holiday-import-status" class="holiday-import-status"></span>
             </div>
-            <div class="date-quick">
-              <button class="date-quick-btn" data-offset="0">今天</button>
-              <button class="date-quick-btn" data-offset="1">+1D</button>
-              <button class="date-quick-btn" data-offset="7">+1W</button>
-              <button class="date-quick-btn" data-offset="14">+2W</button>
+          </div>
+        </div>
+        <div class="tb-quick">
+          <button class="tb-quick-btn" data-offset="0">今天</button>
+          <button class="tb-quick-btn" data-offset="1">+1D</button>
+          <button class="tb-quick-btn" data-offset="7">+1W</button>
+        </div>
+      </div>
+
+      <div class="tb-divider"></div>
+
+      <!-- Period segmented control -->
+      <div class="tb-period">
+        <button class="tb-period-btn active" data-value="MORNING">上午</button>
+        <button class="tb-period-btn" data-value="AFTERNOON">下午</button>
+        <button class="tb-period-btn" data-value="ALL">全天</button>
+      </div>
+
+      <!-- Building select -->
+      <select id="select-building" class="tb-building">
+        <option value="6">松仁大樓</option>
+        <option value="1">仁愛大樓</option>
+        <option value="2">敦化大樓</option>
+      </select>
+
+      <!-- Search API button -->
+      <button id="btn-search" class="tb-search-btn" disabled type="button">搜尋空房</button>
+
+    </div><!-- tb-left -->
+
+    <div class="tb-right">
+
+      <!-- Room name search (client-side filter) -->
+      <div class="tb-room-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+        </svg>
+        <input id="input-room-search" type="text" placeholder="搜尋會議室" autocomplete="off" />
+        <button id="btn-clear-search" class="tb-clear-search" style="display:none" type="button">×</button>
+      </div>
+
+      <!-- Filter panel toggle -->
+      <button id="btn-filter" class="tb-filter-btn" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M3 6h18M6 12h12M10 18h4"/>
+        </svg>
+        篩選
+        <span id="filter-count-badge" class="tb-filter-badge" style="display:none">0</span>
+      </button>
+
+      <!-- View toggle -->
+      <div class="tb-view-toggle">
+        <button id="btn-view-card" class="tb-view-btn" title="牌卡檢視" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3"  y="3"  width="8" height="8" rx="1" fill="currentColor"/>
+            <rect x="13" y="3"  width="8" height="8" rx="1" fill="currentColor"/>
+            <rect x="3"  y="13" width="8" height="8" rx="1" fill="currentColor"/>
+            <rect x="13" y="13" width="8" height="8" rx="1" fill="currentColor"/>
+          </svg>
+        </button>
+        <button id="btn-view-table" class="tb-view-btn active" title="時間表檢視" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M3 6h18M3 12h18M3 18h18"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Session status pill -->
+      <div id="session-status" class="tb-session tb-session-checking">
+        <span class="tb-session-dot"></span>
+        <span id="session-text">檢查中</span>
+        <button id="btn-login" class="tb-login-btn" style="display:none" type="button">前往登入</button>
+      </div>
+      <button id="btn-check-session" class="tb-ghost-btn" type="button">重新檢查</button>
+
+    </div><!-- tb-right -->
+  </header>
+
+  <!-- ── Holiday Warning ────────────────────────────────────────────────────── -->
+  <div id="date-holiday-warning" class="holiday-warning" style="display:none"></div>
+
+  <!-- ── Active Chips Bar ───────────────────────────────────────────────────── -->
+  <div id="chips-bar" class="chips-bar" style="display:none"></div>
+
+  <!-- ── Filter Panel (collapsible) ────────────────────────────────────────── -->
+  <div id="filter-panel" class="filter-panel-wrap">
+    <div class="filter-panel-inner">
+
+      <!-- 時段需求 -->
+      <div class="fp-row">
+        <span class="fp-label">時段需求</span>
+        <div class="fp-time-block">
+          <div class="fp-from-wrap">
+            <span class="fp-sub-label">從</span>
+            <select id="filter-start-time" class="fp-start-select">
+              <option value="">不限</option>
+            </select>
+          </div>
+          <span class="fp-arrow">→</span>
+          <div class="fp-dur-wrap">
+            <span class="fp-sub-label">連續</span>
+            <div class="fp-chip-row" id="dur-chips">
+              <button class="fp-chip" data-value="30" type="button">0.5 hr</button>
+              <button class="fp-chip active" data-value="60" type="button">1 hr</button>
+              <button class="fp-chip" data-value="90" type="button">1.5 hr</button>
+              <button class="fp-chip" data-value="120" type="button">2 hr</button>
             </div>
           </div>
-        </div>
-
-        <div class="field-group">
-          <span class="field-label">時段</span>
-          <div class="period-selector">
-            <button class="period-btn active" data-value="MORNING">上午</button>
-            <button class="period-btn" data-value="AFTERNOON">下午</button>
-            <button class="period-btn" data-value="ALL">全天</button>
-          </div>
-        </div>
-
-        <label>
-          大樓
-          <select id="select-building">
-            <option value="6">松仁</option>
-            <option value="1">仁愛</option>
-            <option value="2">敦化</option>
-          </select>
-        </label>
-
-        <button id="btn-search" class="btn-primary" disabled>搜尋空房</button>
-      </div>
-      <div id="date-holiday-warning" class="date-holiday-warning" style="display:none"></div>
-    </section>
-
-    <!-- Filter Panel -->
-    <section class="filter-panel">
-      <div class="filter-row">
-        <div class="field-group">
-          <span class="field-label">起始時間</span>
-          <select id="filter-start-time">
-            <option value="">不限</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <span class="field-label">時間長度</span>
-          <div class="period-selector">
-            <button class="dur-btn" data-value="30">0.5 hr</button>
-            <button class="dur-btn active" data-value="60">1 hr</button>
-            <button class="dur-btn" data-value="90">1.5 hr</button>
-            <button class="dur-btn" data-value="120">2 hr</button>
-          </div>
-        </div>
-        <div class="field-group">
-          <span class="field-label">容納人數</span>
-          <div class="period-selector">
-            <button class="cap-btn active" data-value="0">不限</button>
-            <button class="cap-btn" data-value="5">5+</button>
-            <button class="cap-btn" data-value="10">10+</button>
-            <button class="cap-btn" data-value="15">15+</button>
-            <button class="cap-btn" data-value="20">20+</button>
-          </div>
+          <span id="fp-time-preview" class="fp-time-preview" style="display:none"></span>
         </div>
       </div>
-      <div id="filter-floor-group" class="field-group filter-floor-group" style="display:none">
-        <span class="field-label">樓層</span>
-        <div id="filter-floor-list" class="period-selector floor-selector"></div>
-      </div>
-      <div class="filter-checks">
-        <label class="filter-check">
-          <input type="checkbox" id="filter-hide-uncommon" />
-          <span class="filter-check-body">
-            <span class="filter-check-title">隱藏不常用會議室</span>
-            <span class="filter-check-hint">階梯教室、中心樹</span>
-          </span>
-        </label>
-        <label class="filter-check">
-          <input type="checkbox" id="filter-exclude-offhours" />
-          <span class="filter-check-body">
-            <span class="filter-check-title">排除不常用時間</span>
-            <span class="filter-check-hint">07:00–09:00、12:00–13:30、18:00 後</span>
-          </span>
-        </label>
-      </div>
-    </section>
 
-    <!-- Error -->
-    <div id="error-msg" class="error-banner" style="display:none"></div>
+      <!-- 容納人數 -->
+      <div class="fp-row">
+        <span class="fp-label">容納人數</span>
+        <div class="fp-chip-row" id="cap-chips">
+          <button class="fp-chip active" data-value="0" type="button">不限</button>
+          <button class="fp-chip" data-value="5" type="button">5+</button>
+          <button class="fp-chip" data-value="10" type="button">10+</button>
+          <button class="fp-chip" data-value="15" type="button">15+</button>
+          <button class="fp-chip" data-value="20" type="button">20+</button>
+        </div>
+      </div>
 
-    <!-- View Toggle -->
-    <div id="view-toggle" class="view-toggle" style="display:none">
-      <button id="btn-view-card" class="view-btn active" title="牌卡檢視">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <rect x="1" y="1" width="6" height="6" rx="1.5" fill="currentColor"/>
-          <rect x="9" y="1" width="6" height="6" rx="1.5" fill="currentColor"/>
-          <rect x="1" y="9" width="6" height="6" rx="1.5" fill="currentColor"/>
-          <rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor"/>
-        </svg>
-        牌卡
-      </button>
-      <button id="btn-view-table" class="view-btn" title="時間表檢視">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <rect x="1" y="1" width="14" height="3" rx="1" fill="currentColor"/>
-          <rect x="1" y="6" width="14" height="3" rx="1" fill="currentColor"/>
-          <rect x="1" y="11" width="14" height="3" rx="1" fill="currentColor"/>
-        </svg>
-        時間表
-      </button>
+      <!-- 樓層 (動態產生) -->
+      <div class="fp-row" id="fp-floor-row" style="display:none">
+        <span class="fp-label">樓層</span>
+        <div class="fp-chip-row" id="floor-chips"></div>
+      </div>
+
+      <!-- 其他 -->
+      <div class="fp-row">
+        <span class="fp-label">其他</span>
+        <div class="fp-checks">
+          <label class="fp-check-item">
+            <input type="checkbox" id="filter-hide-uncommon" />
+            <div class="fp-check-body">
+              <span class="fp-check-title">隱藏不常用會議室</span>
+              <span class="fp-check-hint">階梯教室、中心樹</span>
+            </div>
+          </label>
+          <label class="fp-check-item">
+            <input type="checkbox" id="filter-exclude-offhours" />
+            <div class="fp-check-body">
+              <span class="fp-check-title">排除不常用時間</span>
+              <span class="fp-check-hint">07:00–09:00、12:00–13:30、18:00 後</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
     </div>
+  </div>
 
-    <!-- Loading -->
-    <div id="loading" class="loading-wrap" style="display:none">
-      <span class="spinner"></span>
-      <span>查詢中…</span>
+  <!-- ── Error ───────────────────────────────────────────────────────────────── -->
+  <div id="error-msg" class="error-banner" style="display:none"></div>
+
+  <!-- ── Result Meta Bar ────────────────────────────────────────────────────── -->
+  <div id="result-meta" class="result-meta" style="display:none">
+    <div class="rm-left">
+      <span id="rm-count" class="rm-count">0</span>
+      <span id="rm-desc" class="rm-desc"> 間會議室</span>
     </div>
+    <div class="rm-right">
+      <button id="btn-fav-only" class="rm-fav-btn" type="button">
+        ★ 只看最愛 (<span id="fav-count">0</span>)
+      </button>
+      <div class="rm-legend">
+        <span class="rm-legend-item">
+          <span class="rm-legend-dot" style="background:var(--g-400)"></span>空檔
+        </span>
+        <span class="rm-legend-item">
+          <span class="rm-legend-dot" style="background:var(--p-400)"></span>已預訂
+        </span>
+      </div>
+    </div>
+  </div>
 
-    <!-- Room List (card) -->
-    <main id="room-list" class="room-list"></main>
+  <!-- ── Loading ────────────────────────────────────────────────────────────── -->
+  <div id="loading" class="loading-wrap" style="display:none">
+    <span class="spinner"></span>
+    <span>查詢中…</span>
+  </div>
 
-    <!-- Room Table (timeline) -->
-    <div id="room-table-wrap" class="room-table-wrap" style="display:none">
+  <!-- ── Result Area (flex: 1) ──────────────────────────────────────────────── -->
+  <div id="result-area" class="result-area">
+
+    <!-- Card View -->
+    <main id="room-list" class="room-list" style="display:none"></main>
+
+    <!-- Table View -->
+    <div id="room-table-wrap" style="display:none">
       <table id="room-table" class="room-table"></table>
-    </div>
-
-    <!-- Booking Confirm Modal -->
-    <div id="confirm-modal" class="modal" style="display:none">
-      <div class="modal-backdrop"></div>
-      <div class="modal-content confirm-modal-content">
-        <button id="confirm-close" class="modal-close" aria-label="關閉">×</button>
-        <div class="modal-header">
-          <h2 class="modal-title">確認預訂</h2>
-        </div>
-        <div id="confirm-body" class="confirm-body"></div>
-        <div class="confirm-actions">
-          <button id="confirm-cancel" class="btn-ghost">取消</button>
-          <button id="confirm-go" class="btn-primary">前往預訂</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Image Lightbox -->
-    <div id="image-viewer" class="img-viewer" style="display:none">
-      <img id="image-viewer-img" alt="" />
-    </div>
-
-    <!-- Room Detail Modal -->
-    <div id="room-modal" class="modal" style="display:none">
-      <div class="modal-backdrop"></div>
-      <div class="modal-content">
-        <button id="modal-close" class="modal-close" aria-label="關閉">×</button>
-        <div id="modal-body"></div>
-      </div>
     </div>
 
   </div>
 
-  <script src="../js/parser.js"></script>
-  <script src="../js/api.js"></script>
-  <script src="../js/app.js"></script>
+  <!-- ── Booking Confirm Modal ──────────────────────────────────────────────── -->
+  <div id="confirm-modal" class="modal" style="display:none">
+    <div class="modal-backdrop"></div>
+    <div class="confirm-modal-box">
+      <button id="confirm-close" class="cm-close-btn" type="button">×</button>
+      <div class="cm-label">預訂確認</div>
+      <div id="cm-room-name" class="cm-room-name"></div>
+      <div id="cm-meta" class="cm-meta"></div>
+      <div class="cm-time-block">
+        <div class="cm-time-label">時段</div>
+        <div id="cm-time" class="cm-time"></div>
+      </div>
+      <div class="cm-actions">
+        <button id="confirm-cancel" class="cm-cancel-btn" type="button">取消</button>
+        <button id="confirm-go" class="cm-go-btn" type="button">前往預訂</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Image Lightbox ─────────────────────────────────────────────────────── -->
+  <div id="image-viewer" class="img-viewer" style="display:none">
+    <img id="image-viewer-img" alt="" />
+  </div>
+
+  <!-- ── Room Detail Modal ──────────────────────────────────────────────────── -->
+  <div id="room-modal" class="modal" style="display:none">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <button id="modal-close" class="modal-close" type="button" aria-label="關閉">×</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<script src="../js/parser.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/app.js"></script>
 </body>
 </html>
