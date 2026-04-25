@@ -12,82 +12,79 @@
   <!-- ── Sticky Toolbar (56px) ──────────────────────────────────────────────── -->
   <header class="toolbar">
 
-    <div class="tb-left">
+    <!-- Logo -->
+    <div class="tb-logo">
+      <div class="tb-logo-icon">CB</div>
+      <span class="tb-logo-text">會議室</span>
+    </div>
 
-      <!-- Logo -->
-      <div class="tb-logo">
-        <div class="tb-logo-icon">CB</div>
-        <span class="tb-logo-text">會議室</span>
-      </div>
+    <div class="tb-divider"></div>
 
-      <div class="tb-divider"></div>
-
-      <!-- Date + quick shortcuts -->
-      <div class="tb-date-group">
-        <div class="cal-wrap" id="cal-wrap">
-          <button class="tb-date-btn cal-trigger" id="cal-trigger" type="button">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <rect x="3" y="4" width="18" height="18" rx="2"/>
-              <path d="M16 2v4M8 2v4M3 10h18"/>
-            </svg>
-            <span id="cal-display">—</span>
-            <span id="cal-dow" class="tb-dow"></span>
-          </button>
-          <!-- Calendar popup -->
-          <div class="cal-popup" id="cal-popup" style="display:none">
-            <div class="cal-nav">
-              <button class="cal-nav-btn" id="cal-prev" type="button">‹</button>
-              <span class="cal-month-label" id="cal-month-label"></span>
-              <button class="cal-nav-btn" id="cal-next" type="button">›</button>
+    <!-- Date + quick shortcuts -->
+    <div class="tb-date-group">
+      <div class="cal-wrap" id="cal-wrap">
+        <button class="tb-date-btn cal-trigger" id="cal-trigger" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <path d="M16 2v4M8 2v4M3 10h18"/>
+          </svg>
+          <span id="cal-display">—</span>
+          <span id="cal-dow" class="tb-dow"></span>
+        </button>
+        <!-- Calendar popup -->
+        <div class="cal-popup" id="cal-popup" style="display:none">
+          <div class="cal-nav">
+            <button class="cal-nav-btn" id="cal-prev" type="button">‹</button>
+            <span class="cal-month-label" id="cal-month-label"></span>
+            <button class="cal-nav-btn" id="cal-next" type="button">›</button>
+          </div>
+          <div class="cal-weekdays">
+            <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+          </div>
+          <div class="cal-days" id="cal-days"></div>
+          <div class="cal-footer">
+            <div class="cal-legend">
+              <span class="cal-legend-item">
+                <span class="cal-legend-dot cal-legend-holiday"></span>國定假日
+              </span>
             </div>
-            <div class="cal-weekdays">
-              <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+            <div class="cal-holiday-import">
+              <input id="holiday-file-input" type="file" accept=".csv" style="display:none">
+              <button class="holiday-import-btn" id="btn-load-builtin-holidays" type="button">載入 115 年</button>
+              <button class="holiday-import-btn" id="btn-import-holidays" type="button">匯入 CSV</button>
+              <button class="holiday-import-btn holiday-clear-btn" id="btn-clear-holidays" type="button">清除</button>
             </div>
-            <div class="cal-days" id="cal-days"></div>
-            <div class="cal-footer">
-              <div class="cal-legend">
-                <span class="cal-legend-item">
-                  <span class="cal-legend-dot cal-legend-holiday"></span>國定假日
-                </span>
-              </div>
-              <div class="cal-holiday-import">
-                <input id="holiday-file-input" type="file" accept=".csv" style="display:none">
-                <button class="holiday-import-btn" id="btn-load-builtin-holidays" type="button">載入 115 年</button>
-                <button class="holiday-import-btn" id="btn-import-holidays" type="button">匯入 CSV</button>
-                <button class="holiday-import-btn holiday-clear-btn" id="btn-clear-holidays" type="button">清除</button>
-              </div>
-              <span id="holiday-import-status" class="holiday-import-status"></span>
-            </div>
+            <span id="holiday-import-status" class="holiday-import-status"></span>
           </div>
         </div>
-        <div class="tb-quick">
-          <button class="tb-quick-btn" data-offset="0">今天</button>
-          <button class="tb-quick-btn" data-offset="1">+1D</button>
-          <button class="tb-quick-btn" data-offset="7">+1W</button>
-        </div>
       </div>
-
-      <div class="tb-divider"></div>
-
-      <!-- Period segmented control -->
-      <div class="tb-period">
-        <button class="tb-period-btn active" data-value="MORNING">上午</button>
-        <button class="tb-period-btn" data-value="AFTERNOON">下午</button>
-        <button class="tb-period-btn" data-value="ALL">全天</button>
+      <div class="tb-quick">
+        <button class="tb-quick-btn" data-offset="0">今天</button>
+        <button class="tb-quick-btn" data-offset="1">+1D</button>
+        <button class="tb-quick-btn" data-offset="7">+1W</button>
       </div>
+    </div>
 
-      <!-- Building select -->
-      <select id="select-building" class="tb-building">
-        <option value="6">松仁大樓</option>
-        <option value="1">仁愛大樓</option>
-        <option value="2">敦化大樓</option>
-      </select>
+    <div class="tb-divider"></div>
 
-      <!-- Search API button -->
-      <button id="btn-search" class="tb-search-btn" disabled type="button">搜尋空房</button>
+    <!-- Period segmented control -->
+    <div class="tb-period">
+      <button class="tb-period-btn active" data-value="MORNING">上午</button>
+      <button class="tb-period-btn" data-value="AFTERNOON">下午</button>
+      <button class="tb-period-btn" data-value="ALL">全天</button>
+    </div>
 
-    </div><!-- tb-left -->
+    <!-- Building select -->
+    <select id="select-building" class="tb-building">
+      <option value="6">松仁大樓</option>
+      <option value="1">仁愛大樓</option>
+      <option value="2">敦化大樓</option>
+    </select>
 
+    <!-- Search API button -->
+    <button id="btn-search" class="tb-search-btn" disabled type="button">搜尋空房</button>
+
+    <!-- Right group: pushed to the right with margin-left: auto -->
     <div class="tb-right">
 
       <!-- Room name search (client-side filter) -->

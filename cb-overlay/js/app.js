@@ -623,7 +623,7 @@ const App = (() => {
 
     // 3. Body
     const tbody = document.createElement('tbody');
-    const durLabel = state.filterDuration === 30 ? '0.5 hr' : `${state.filterDuration / 60} hr`;
+    const durLabel = '0.5 hr'; // 點擊預設 0.5hr；拖曳由 attachTableHover 動態更新
 
     for (const room of rooms) {
       const isFav = state.favorites.has(String(room.pk));
@@ -680,11 +680,7 @@ const App = (() => {
           label.textContent = `+ 預訂 ${durLabel}`;
           freeInner.appendChild(label);
           td.appendChild(freeInner);
-          td.addEventListener('click', () => {
-            const startMin = toMin(td.dataset.slotStart);
-            const endMin   = startMin + state.filterDuration;
-            handleBook({ pk: td.dataset.roomPk, start: td.dataset.slotStart, end: fromMin(endMin) });
-          });
+          // 點擊預訂由 attachTableHover 的 mousedown/mouseup 處理
         } else if (cur.type === 'booked') {
           td.classList.add('rt-cell-booked');
           const b = cur.slot;
@@ -721,40 +717,110 @@ const App = (() => {
   }
 
   function attachTableHover(table, intervals) {
-    let hovered = [];
+    let hovered = [];       // 一般 hover 亮起的格
+    let isDragging = false;
+    let dragStart = null;
+    let dragCells = [];     // 拖曳選取的格
 
-    table.addEventListener('mouseover', (e) => {
+    function clearHover() {
+      hovered.forEach(c => c.classList.remove('rt-cell-hover'));
+      hovered = [];
+    }
+    function clearDrag() {
+      dragCells.forEach(c => c.classList.remove('rt-cell-hover', 'rt-drag-inner'));
+      dragCells = [];
+    }
+    function setBookLabel(cells, durStr) {
+      cells.forEach((c, i) => {
+        const lbl = c.querySelector('.rt-book-label');
+        if (!lbl) return;
+        lbl.textContent = i === 0 ? `+ 預訂 ${durStr}` : '';
+      });
+    }
+    function collectCells(tr, fromMin, toEndMin) {
+      const maxEnd = fromMin + 120; // 最多 2hr
+      const result = [];
+      tr.querySelectorAll('td.rt-cell-free').forEach(c => {
+        const cs = toMin(c.dataset.slotStart);
+        const ce = toMin(c.dataset.slotEnd);
+        if (cs >= fromMin && ce <= Math.min(toEndMin, maxEnd)) result.push(c);
+      });
+      return result;
+    }
+    function durStr(cells) {
+      const min = cells.length * 30;
+      return min < 60 ? '0.5 hr' : `${min / 60} hr`;
+    }
+
+    // ── mousedown：開始拖曳 ─────────────────────────────────────────────────
+    table.addEventListener('mousedown', (e) => {
       const td = e.target.closest('td.rt-cell-free');
       if (!td) return;
-      clearHoverCells(hovered);
-      hovered = [];
+      e.preventDefault(); // 防止文字選取
+      isDragging = true;
+      dragStart = td;
+      clearHover();
+      clearDrag();
+      dragCells = [td];
+      td.classList.add('rt-cell-hover');
+      setBookLabel(dragCells, '0.5 hr');
 
-      const slotStart = toMin(td.dataset.slotStart);
-      const slotEnd   = slotStart + state.filterDuration;
-      const tr = td.closest('tr');
-
-      tr.querySelectorAll('td.rt-cell-free').forEach(cell => {
-        const cs = toMin(cell.dataset.slotStart);
-        const ce = toMin(cell.dataset.slotEnd);
-        if (cs >= slotStart && ce <= slotEnd) {
-          cell.classList.add('rt-cell-hover');
-          hovered.push(cell);
-        }
-      });
+      // 滑鼠在 table 外放開時取消
+      document.addEventListener('mouseup', () => {
+        if (isDragging) { isDragging = false; clearDrag(); dragStart = null; }
+      }, { once: true });
     });
 
-    table.addEventListener('mouseout', (e) => {
-      if (!e.relatedTarget || !e.relatedTarget.closest('tr')) {
-        clearHoverCells(hovered);
-        hovered = [];
+    // ── mouseover：拖曳擴展 / 一般 hover ────────────────────────────────────
+    table.addEventListener('mouseover', (e) => {
+      const td = e.target.closest('td.rt-cell-free');
+
+      if (isDragging && dragStart) {
+        if (!td) return;
+        const tr = dragStart.closest('tr');
+        if (td.closest('tr') !== tr) return; // 不跨列
+        const startMin = toMin(dragStart.dataset.slotStart);
+        const hoverEnd = toMin(td.dataset.slotEnd);
+        if (hoverEnd <= startMin) return; // 不向左拖
+        clearDrag();
+        dragCells = collectCells(tr, startMin, hoverEnd);
+        dragCells.forEach((c, i) => {
+          c.classList.add('rt-cell-hover');
+          if (i > 0) c.classList.add('rt-drag-inner'); // 非首格隱藏標籤
+        });
+        setBookLabel(dragCells, durStr(dragCells));
       } else {
-        const fromTr = e.target.closest('tr');
-        const toTr   = e.relatedTarget.closest('tr');
-        if (fromTr !== toTr) {
-          clearHoverCells(hovered);
-          hovered = [];
-        }
+        // 一般 hover：只亮 1 格
+        clearHover();
+        if (!td) return;
+        hovered = [td];
+        td.classList.add('rt-cell-hover');
+        setBookLabel([td], '0.5 hr');
       }
+    });
+
+    // ── mouseout：離開列就清除 hover ────────────────────────────────────────
+    table.addEventListener('mouseout', (e) => {
+      if (isDragging) return;
+      const fromTr = e.target.closest('tr');
+      const toEl = e.relatedTarget;
+      if (!toEl || toEl.closest('tr') !== fromTr) clearHover();
+    });
+
+    // ── mouseup：確認選取並開啟預訂 ─────────────────────────────────────────
+    table.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      const cells = [...dragCells];
+      const start = dragStart;
+      clearDrag();
+      dragStart = null;
+      if (!cells.length || !start) return;
+      handleBook({
+        pk:    start.dataset.roomPk,
+        start: start.dataset.slotStart,
+        end:   cells[cells.length - 1].dataset.slotEnd,
+      });
     });
   }
 
@@ -943,7 +1009,7 @@ const App = (() => {
     $('cm-meta').textContent = metaParts.join(' · ');
 
     const startMin = toMin(dataset.start);
-    const endTime  = dataset.end || fromMin(startMin + state.filterDuration);
+    const endTime  = dataset.end || fromMin(startMin + 30);
     const dur = (toMin(endTime) - startMin) / 60;
     const durStr = dur < 1 ? `${dur * 60} 分鐘` : `${dur} 小時`;
     $('cm-time').innerHTML = `${esc(dataset.start)} – ${esc(endTime)} <em style="font-size:14px;font-weight:400;color:var(--text-mute)">(${durStr})</em>`;
