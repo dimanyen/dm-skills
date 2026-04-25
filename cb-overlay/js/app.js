@@ -201,7 +201,6 @@ const App = (() => {
       timePeriod: state.timePeriod,
       buildingPK: state.buildingPK,
       viewMode: state.viewMode,
-      filterStartTime: state.filterStartTime,
       filterDuration: state.filterDuration,
       filterCapacity: state.filterCapacity,
       filterHideUncommon: state.filterHideUncommon,
@@ -231,7 +230,6 @@ const App = (() => {
       ...prefs,
       searchDate: resolvedDate,
       viewMode: prefs.viewMode || 'table',
-      filterStartTime: prefs.filterStartTime || '',
       filterDuration: prefs.filterDuration || 60,
       filterCapacity: prefs.filterCapacity ?? 0,
       filterHideUncommon: prefs.filterHideUncommon || false,
@@ -891,7 +889,6 @@ const App = (() => {
     state.timePeriod = prefs.timePeriod || defaultPeriod;
     state.buildingPK = prefs.buildingPK || '6';
     state.viewMode = prefs.viewMode || 'table';
-    state.filterStartTime = prefs.filterStartTime;
     state.filterDuration = prefs.filterDuration;
     state.filterCapacity = prefs.filterCapacity;
     state.filterHideUncommon = prefs.filterHideUncommon;

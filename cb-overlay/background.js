@@ -5,9 +5,10 @@ chrome.action.onClicked.addListener(async (tab) => {
   console.log(TAG, 'action clicked, tab:', tab?.id, tab?.url);
   if (!tab || !tab.id) return;
 
-  // 非原站台頁面 → 直接導向原站台（content script 會在頁面載入後接管）
+  // 非原站台頁面 → 設提示旗標後導向原站台（content script 載入後會顯示引導提示）
   if (!/^https:\/\/booking\.cathayholdings\.com\//.test(tab.url || '')) {
     console.log(TAG, '非原站台頁面，導向原站台');
+    await chrome.storage.local.set({ cb_needs_hint: true });
     chrome.tabs.update(tab.id, { url: 'https://booking.cathayholdings.com/' });
     return;
   }

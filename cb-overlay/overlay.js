@@ -277,9 +277,100 @@
     }
   });
 
+  // ── 首次引導提示泡泡 ───────────────────────────────────────────────────────
+
+  const HINT_ID = 'cb-overlay-hint';
+
+  function removeHint() {
+    document.getElementById(HINT_ID)?.remove();
+  }
+
+  function showHint() {
+    if (document.getElementById(HINT_ID)) return;
+
+    const hint = document.createElement('div');
+    hint.id = HINT_ID;
+    Object.assign(hint.style, {
+      position: 'fixed',
+      top: '54px',
+      right: '12px',
+      zIndex: '2147483646',
+      background: '#1a73e8',
+      color: '#fff',
+      borderRadius: '10px',
+      padding: '10px 14px 10px 12px',
+      fontSize: '13px',
+      lineHeight: '1.5',
+      maxWidth: '200px',
+      boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
+      fontFamily: 'system-ui, sans-serif',
+      cursor: 'default',
+      userSelect: 'none',
+    });
+
+    // 箭頭（指向右上角 icon）
+    const arrow = document.createElement('div');
+    Object.assign(arrow.style, {
+      position: 'absolute',
+      top: '-8px',
+      right: '18px',
+      width: '0',
+      height: '0',
+      borderLeft: '7px solid transparent',
+      borderRight: '7px solid transparent',
+      borderBottom: '8px solid #1a73e8',
+    });
+    hint.appendChild(arrow);
+
+    const text = document.createElement('span');
+    text.textContent = '再點一次右上角圖示，即可開啟 CB 會議室 👆';
+    hint.appendChild(text);
+
+    // 關閉按鈕
+    const x = document.createElement('button');
+    x.type = 'button';
+    x.textContent = '×';
+    Object.assign(x.style, {
+      position: 'absolute',
+      top: '4px',
+      right: '6px',
+      background: 'none',
+      border: 'none',
+      color: 'rgba(255,255,255,0.8)',
+      fontSize: '16px',
+      lineHeight: '1',
+      cursor: 'pointer',
+      padding: '0',
+    });
+    x.addEventListener('click', removeHint);
+    hint.appendChild(x);
+
+    document.documentElement.appendChild(hint);
+
+    // 8 秒後自動消失
+    setTimeout(removeHint, 8000);
+  }
+
+  function maybeShowHint() {
+    chrome.storage.local.get('cb_needs_hint', (result) => {
+      if (!result.cb_needs_hint) return;
+      // 只在會議室查詢頁面顯示，其他頁面（首頁、登入頁）先略過，保留旗標
+      if (!location.pathname.includes('/mrm101w')) return;
+      chrome.storage.local.remove('cb_needs_hint');
+      if (document.readyState === 'complete') {
+        showHint();
+      } else {
+        window.addEventListener('load', showHint, { once: true });
+      }
+    });
+  }
+
+  maybeShowHint();
+
   // 接收 background 的切換訊息
   chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (msg?.type === 'CB_TOGGLE_OVERLAY') {
+      removeHint();
       toggle();
       sendResponse({ ok: true });
     } else if (msg?.type === 'CB_CLOSE_OVERLAY') {
