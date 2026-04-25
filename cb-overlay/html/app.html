@@ -84,6 +84,14 @@
     <!-- Search API button -->
     <button id="btn-search" class="tb-search-btn" disabled type="button">搜尋空房</button>
 
+    <!-- Session status pill + recheck (緊接搜尋按鈕右側) -->
+    <div id="session-status" class="tb-session tb-session-checking">
+      <span class="tb-session-dot"></span>
+      <span id="session-text">確認登入狀態</span>
+      <button id="btn-login" class="tb-login-btn" style="display:none" type="button">前往登入</button>
+    </div>
+    <button id="btn-check-session" class="tb-ghost-btn" type="button">重新檢查</button>
+
     <!-- Right group: pushed to the right with margin-left: auto -->
     <div class="tb-right">
 
@@ -121,14 +129,6 @@
           </svg>
         </button>
       </div>
-
-      <!-- Session status pill -->
-      <div id="session-status" class="tb-session tb-session-checking">
-        <span class="tb-session-dot"></span>
-        <span id="session-text">檢查中</span>
-        <button id="btn-login" class="tb-login-btn" style="display:none" type="button">前往登入</button>
-      </div>
-      <button id="btn-check-session" class="tb-ghost-btn" type="button">重新檢查</button>
 
     </div><!-- tb-right -->
   </header>

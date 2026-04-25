@@ -274,7 +274,7 @@ const App = (() => {
       state.sessionOk       ? 'tb-session-ok' :
                                'tb-session-err'
     );
-    textEl.textContent = state.sessionChecking ? '確認中' : state.sessionOk ? '已登入' : '未登入';
+    textEl.textContent = state.sessionChecking ? '確認登入狀態' : state.sessionOk ? '已登入' : '未登入';
     loginBtn.style.display = (!state.sessionChecking && !state.sessionOk) ? '' : 'none';
 
     // Search button
