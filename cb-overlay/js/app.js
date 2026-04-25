@@ -6,7 +6,7 @@ const App = (() => {
   const toMin = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
   const fromMin = (m) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 
-  const UNCOMMON_ROOMS = ['階梯教室', '中心樹'];
+  const DEFAULT_UNCOMMON_KEYWORDS = '階梯教室,中心樹';
   const OFF_HOURS = [
     { start: 7 * 60, end: 9 * 60 },
     { start: 12 * 60, end: 13 * 60 + 30 },
@@ -35,6 +35,7 @@ const App = (() => {
     filterCapacity: 0,
     filterFloors: new Set(),
     filterHideUncommon: false,
+    filterUncommonKeywords: DEFAULT_UNCOMMON_KEYWORDS,
     filterExcludeOffHours: false,
     // 持久化
     favorites: new Set(),
@@ -147,7 +148,8 @@ const App = (() => {
     }
 
     if (state.filterHideUncommon) {
-      result = result.filter(r => !UNCOMMON_ROOMS.some(kw => r.name.includes(kw)));
+      const kws = state.filterUncommonKeywords.split(',').map(s => s.trim()).filter(Boolean);
+      if (kws.length) result = result.filter(r => !kws.some(kw => r.name.includes(kw)));
     }
 
     if (state.filterCapacity > 0) {
@@ -221,6 +223,7 @@ const App = (() => {
       filterDuration: state.filterDuration,
       filterCapacity: state.filterCapacity,
       filterHideUncommon: state.filterHideUncommon,
+      filterUncommonKeywords: state.filterUncommonKeywords,
       filterExcludeOffHours: state.filterExcludeOffHours,
     };
     chrome.storage.local.set({ [STORAGE_KEY]: prefs });
@@ -241,6 +244,7 @@ const App = (() => {
       filterDuration: prefs.filterDuration || 60,
       filterCapacity: prefs.filterCapacity ?? 0,
       filterHideUncommon: prefs.filterHideUncommon || false,
+      filterUncommonKeywords: prefs.filterUncommonKeywords ?? DEFAULT_UNCOMMON_KEYWORDS,
       filterExcludeOffHours: prefs.filterExcludeOffHours || false,
     };
   }
@@ -428,8 +432,9 @@ const App = (() => {
       btn.classList.toggle('active', Number(btn.dataset.value) === state.filterCapacity);
     });
 
-    // Sync checkboxes
+    // Sync checkboxes + keywords input
     $('filter-hide-uncommon').checked  = state.filterHideUncommon;
+    $('filter-uncommon-keywords').value = state.filterUncommonKeywords;
     $('filter-exclude-offhours').checked = state.filterExcludeOffHours;
 
     // Time preview
@@ -1253,6 +1258,7 @@ const App = (() => {
       btn.classList.toggle('active', Number(btn.dataset.value) === state.filterCapacity);
     });
     $('filter-hide-uncommon').checked    = state.filterHideUncommon;
+    $('filter-uncommon-keywords').value  = state.filterUncommonKeywords;
     $('filter-exclude-offhours').checked = state.filterExcludeOffHours;
   }
 
@@ -1270,8 +1276,9 @@ const App = (() => {
     state.viewMode            = prefs.viewMode || 'table';
     state.filterDuration      = prefs.filterDuration;
     state.filterCapacity      = prefs.filterCapacity;
-    state.filterHideUncommon  = prefs.filterHideUncommon;
-    state.filterExcludeOffHours = prefs.filterExcludeOffHours;
+    state.filterHideUncommon      = prefs.filterHideUncommon;
+    state.filterUncommonKeywords  = prefs.filterUncommonKeywords;
+    state.filterExcludeOffHours   = prefs.filterExcludeOffHours;
 
     Calendar.init(state.searchDate);
     $('select-building').value = state.buildingPK;
@@ -1379,11 +1386,16 @@ const App = (() => {
       });
     });
 
-    // Checkboxes
+    // Checkboxes + keywords input
     $('filter-hide-uncommon').addEventListener('change', (e) => {
       state.filterHideUncommon = e.target.checked;
       savePrefs();
       render();
+    });
+    $('filter-uncommon-keywords').addEventListener('input', (e) => {
+      state.filterUncommonKeywords = e.target.value;
+      savePrefs();
+      if (state.filterHideUncommon) render();
     });
     $('filter-exclude-offhours').addEventListener('change', (e) => {
       state.filterExcludeOffHours = e.target.checked;
