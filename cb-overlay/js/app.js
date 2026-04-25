@@ -690,13 +690,18 @@ const App = (() => {
           const b = cur.slot;
           const bookedInner = document.createElement('div');
           bookedInner.className = 'rt-booked-inner';
-          const lines = (b.info && b.info.length) ? b.info : [b.title, b.department].filter(Boolean);
-          bookedInner.innerHTML = `
-            <div class="rt-booked-title">${lines[0] || '已預訂'}</div>
-            ${lines[1] ? `<div class="rt-booked-dept">${lines[1]}</div>` : ''}
-            ${lines[2] || b.owner ? `<div class="rt-booked-owner">${lines[2] || b.owner || ''}</div>` : ''}
-          `;
-          bookedInner.title = `${(lines[0] || '已預訂')}（${b.startTime}–${b.endTime}）`;
+          const lines = (b.info && b.info.length)
+            ? b.info
+            : [b.title, b.department, b.owner, b.ext].filter(Boolean);
+          const display = lines.length ? lines : ['已預訂'];
+          // 逐行渲染，保留姓名與分機等所有欄位
+          display.forEach((text, idx) => {
+            const div = document.createElement('div');
+            div.className = idx === 0 ? 'rt-booked-title' : idx === 1 ? 'rt-booked-dept' : 'rt-booked-owner';
+            div.textContent = text;
+            bookedInner.appendChild(div);
+          });
+          bookedInner.title = `${display.join(' / ')}（${b.startTime}–${b.endTime}）`;
           td.appendChild(bookedInner);
         } else {
           td.classList.add('rt-cell-empty');
@@ -842,11 +847,26 @@ const App = (() => {
       for (const b of bookedVisible) {
         const row = document.createElement('div');
         row.className = 'card-booked-row';
-        const lines = (b.info && b.info.length) ? b.info : [b.title, b.department].filter(Boolean);
-        row.innerHTML = `
-          <span class="card-booked-time">${b.startTime}–${b.endTime}</span>
-          <span class="card-booked-title">${lines[0] || '已預訂'}</span>
-        `;
+        const lines = (b.info && b.info.length)
+          ? b.info
+          : [b.title, b.department, b.owner, b.ext].filter(Boolean);
+        const timeEl = document.createElement('span');
+        timeEl.className = 'card-booked-time';
+        timeEl.textContent = `${b.startTime}–${b.endTime}`;
+        const infoEl = document.createElement('div');
+        infoEl.className = 'card-booked-info';
+        const titleEl = document.createElement('span');
+        titleEl.className = 'card-booked-title';
+        titleEl.textContent = lines[0] || '已預訂';
+        infoEl.appendChild(titleEl);
+        if (lines.length > 1) {
+          const subEl = document.createElement('span');
+          subEl.className = 'card-booked-sub';
+          subEl.textContent = lines.slice(1).join(' · ');
+          infoEl.appendChild(subEl);
+        }
+        row.appendChild(timeEl);
+        row.appendChild(infoEl);
         bookedList.appendChild(row);
       }
       card.appendChild(bookedList);
