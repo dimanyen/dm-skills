@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "CB 會議室 (Overlay)",
+  "version": "0.1.0",
+  "description": "國泰會議室預訂 - 直接覆蓋原站台的 Overlay 介面",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://booking.cathayholdings.com/*"
+  ],
+  "action": {
+    "default_title": "CB 會議室 (Overlay)",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://booking.cathayholdings.com/*"],
+      "js": ["overlay.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["html/app.html", "css/app.css", "js/app.js", "js/api.js", "js/parser.js", "assets/*.csv"],
+      "matches": ["https://booking.cathayholdings.com/*"]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

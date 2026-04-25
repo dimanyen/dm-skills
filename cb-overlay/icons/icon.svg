@@ -1,0 +1,12 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- 前方陰影 -->
+  <rect x="44" y="44" width="80" height="80" rx="14" fill="#4f46e5" opacity="0.35"/>
+  <!-- 後方原站台卡片 -->
+  <rect x="14" y="14" width="80" height="80" rx="14" fill="#c7d2fe"/>
+  <!-- 前方 overlay 卡片 -->
+  <rect x="40" y="40" width="80" height="80" rx="14" fill="#6366f1"/>
+  <!-- 加號 - 垂直棒 -->
+  <rect x="74" y="60" width="12" height="40" rx="4" fill="#fff"/>
+  <!-- 加號 - 水平棒 -->
+  <rect x="60" y="74" width="40" height="12" rx="4" fill="#fff"/>
+</svg>
