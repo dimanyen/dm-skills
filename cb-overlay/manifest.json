@@ -30,7 +30,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["html/app.html", "css/app.css", "js/app.js", "js/api.js", "js/parser.js", "assets/*.csv"],
+      "resources": ["html/app.html", "css/app.css", "js/app.js", "js/api.js", "js/parser.js", "assets/*.csv", "icons/icon48.png"],
       "matches": ["https://booking.cathayholdings.com/*"]
     }
   ],

@@ -9,6 +9,7 @@
   const HOST_ID = 'cb-overlay-host';
   const FRAME_ID = 'cb-overlay-frame';
   const APP_URL = chrome.runtime.getURL('html/app.html');
+  const ACTION_ICON_URL = chrome.runtime.getURL('icons/icon48.png');
 
   console.log(TAG, '已載入：', location.href);
 
@@ -292,17 +293,20 @@
     hint.id = HINT_ID;
     Object.assign(hint.style, {
       position: 'fixed',
-      top: '54px',
+      top: '12px',
       right: '12px',
       zIndex: '2147483646',
       background: '#1a73e8',
       color: '#fff',
-      borderRadius: '10px',
-      padding: '10px 14px 10px 12px',
+      borderRadius: '14px',
+      padding: '12px 36px 12px 14px',
       fontSize: '13px',
       lineHeight: '1.5',
-      maxWidth: '200px',
+      maxWidth: '260px',
       boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '10px',
       fontFamily: 'system-ui, sans-serif',
       cursor: 'default',
       userSelect: 'none',
@@ -313,7 +317,7 @@
     Object.assign(arrow.style, {
       position: 'absolute',
       top: '-8px',
-      right: '18px',
+      right: '22px',
       width: '0',
       height: '0',
       borderLeft: '7px solid transparent',
@@ -322,8 +326,24 @@
     });
     hint.appendChild(arrow);
 
+    const icon = document.createElement('img');
+    icon.src = ACTION_ICON_URL;
+    icon.alt = 'CB 會議室圖示';
+    Object.assign(icon.style, {
+      width: '30px',
+      height: '30px',
+      flex: '0 0 auto',
+      borderRadius: '8px',
+      background: '#fff',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+    });
+    icon.addEventListener('error', () => {
+      icon.style.display = 'none';
+    });
+    hint.appendChild(icon);
+
     const text = document.createElement('span');
-    text.textContent = '再點一次右上角圖示，即可開啟 CB 會議室 👆';
+    text.textContent = '再點一次右上角圖示，即可開啟 CB 會議室';
     hint.appendChild(text);
 
     // 關閉按鈕
