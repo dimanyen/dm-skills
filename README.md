@@ -36,6 +36,17 @@ Chrome 擴充套件（Manifest V3），會議室查詢 Overlay 工具：
 
 詳細說明見 [cb-overlay/README.md](cb-overlay/README.md)。
 
+### [chrome-ex-svgloader/](chrome-ex-svgloader)
+
+Chrome 擴充套件（Manifest V3），SVG 下載器：
+
+- 點擊工具列圖示啟用選擇模式，懸停網頁上的 SVG 元素會以藍色框線高亮
+- 點擊即可將 SVG 透過 Canvas API 以 2 倍縮放轉成 PNG 下載（CORS 受限時回退為原始 SVG）
+- 支援內聯 `<svg>`、`<img src="*.svg">`、`<object>`、`<embed>` 等格式
+- 按 `Esc` 退出選擇模式，並依元素 ID 自動命名檔案
+
+詳細說明見 [chrome-ex-svgloader/README.md](chrome-ex-svgloader/README.md)。
+
 ## 安裝 skill
 
 將 `.skill` 檔拖入 Claude Code，或使用 `skill-installer` skill 從此 repo 安裝。
@@ -47,6 +58,7 @@ Chrome 擴充套件（Manifest V3），會議室查詢 Overlay 工具：
 3. 點「載入未封裝項目」，依需求選擇對應資料夾：
    - eLearning 輔助工具：選擇 [learning-hard/elearn-helper](learning-hard/elearn-helper)
    - 會議室查詢 Overlay：選擇 [cb-overlay](cb-overlay)
+   - SVG 下載器：選擇 [chrome-ex-svgloader](chrome-ex-svgloader)
 
 ## 授權
 
