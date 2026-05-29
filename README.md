@@ -23,6 +23,8 @@ Chrome 擴充套件（Manifest V3），針對企業 eLearning 平台設計：
 - 自動連續播放課程影片
 - 繞過 Chrome autoplay policy，以靜音啟動後恢復音量
 
+下載安裝包：[elearn-helper.zip](https://github.com/dimanyen/dm-skills/raw/master/dist/elearn-helper.zip)
+
 ### [cb-overlay/](cb-overlay)
 
 Chrome 擴充套件（Manifest V3），會議室查詢 Overlay 工具：
@@ -33,6 +35,8 @@ Chrome 擴充套件（Manifest V3），會議室查詢 Overlay 工具：
 - 提供牌卡（Card）與時間表（Table）雙檢視模式
 - 最愛會議室、會議室詳情（設備 + 圖片輪播）、點擊空檔直達預訂頁面
 - 月曆整合國定假日標示，支援內建假日或匯入 CSV
+
+下載安裝包：[cb-overlay.zip](https://github.com/dimanyen/dm-skills/raw/master/dist/cb-overlay.zip)
 
 詳細說明見 [cb-overlay/README.md](cb-overlay/README.md)。
 
@@ -45,6 +49,8 @@ Chrome 擴充套件（Manifest V3），SVG 下載器：
 - 支援內聯 `<svg>`、`<img src="*.svg">`、`<object>`、`<embed>` 等格式
 - 按 `Esc` 退出選擇模式，並依元素 ID 自動命名檔案
 
+下載安裝包：[svg-downloader.zip](https://github.com/dimanyen/dm-skills/raw/master/dist/svg-downloader.zip)
+
 詳細說明見 [chrome-ex-svgloader/README.md](chrome-ex-svgloader/README.md)。
 
 ## 安裝 skill
@@ -53,12 +59,30 @@ Chrome 擴充套件（Manifest V3），SVG 下載器：
 
 ## 安裝 Chrome 擴充套件
 
-1. 打開 `chrome://extensions`
-2. 啟用右上角「開發人員模式」
-3. 點「載入未封裝項目」，依需求選擇對應資料夾：
-   - eLearning 輔助工具：選擇 [learning-hard/elearn-helper](learning-hard/elearn-helper)
-   - 會議室查詢 Overlay：選擇 [cb-overlay](cb-overlay)
-   - SVG 下載器：選擇 [chrome-ex-svgloader](chrome-ex-svgloader)
+預先打包好的安裝包放在 [`dist/`](dist)，可直接下載安裝（不需 clone 整個 repo）：
+
+| 擴充套件 | 下載連結 |
+| --- | --- |
+| eLearning 輔助工具 | [elearn-helper.zip](https://github.com/dimanyen/dm-skills/raw/master/dist/elearn-helper.zip) |
+| 會議室查詢 Overlay | [cb-overlay.zip](https://github.com/dimanyen/dm-skills/raw/master/dist/cb-overlay.zip) |
+| SVG 下載器 | [svg-downloader.zip](https://github.com/dimanyen/dm-skills/raw/master/dist/svg-downloader.zip) |
+
+安裝步驟：
+
+1. 點上方連結下載對應的 `.zip`，解壓縮後會得到一個含 `manifest.json` 的資料夾。
+2. 打開 `chrome://extensions`。
+3. 啟用右上角「開發人員模式」。
+4. 點「載入未封裝項目」，選擇剛剛解壓出的資料夾即可。
+
+> 若要從原始碼安裝，可直接以「載入未封裝項目」選取 repo 內對應資料夾（[learning-hard/elearn-helper](learning-hard/elearn-helper)、[cb-overlay](cb-overlay)、[chrome-ex-svgloader](chrome-ex-svgloader)）。
+
+## 重新打包擴充套件
+
+修改擴充套件原始碼後，執行下列指令即可重新產生 `dist/` 內的 zip：
+
+```bash
+bash scripts/build-extensions.sh
+```
 
 ## 授權
 
