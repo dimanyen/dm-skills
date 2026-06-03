@@ -1,0 +1,119 @@
+:root {
+  --green: #217346;
+  --green-dark: #1a5c38;
+  --bg: #f7f8fa;
+  --panel: #ffffff;
+  --border: #d8dce0;
+  --text: #1f2328;
+  --muted: #6b7280;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.bar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 20px;
+  background: var(--green);
+  color: #fff;
+  flex-wrap: wrap;
+}
+.bar h1 { margin: 0; font-size: 16px; font-weight: 600; }
+.bar-actions { display: flex; align-items: center; gap: 10px; }
+
+.tabs {
+  display: flex;
+  background: rgba(255,255,255,.15);
+  border-radius: 8px;
+  padding: 2px;
+}
+.tab {
+  border: none;
+  background: transparent;
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.tab.active { background: #fff; color: var(--green-dark); font-weight: 600; }
+
+.btn {
+  border: 1px solid rgba(255,255,255,.6);
+  background: transparent;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.btn:hover { background: rgba(255,255,255,.15); }
+
+main { max-width: 960px; margin: 24px auto; padding: 0 20px; }
+
+.rendered, .source {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.rendered { font-size: 15px; line-height: 1.6; }
+.rendered h1, .rendered h2, .rendered h3 { margin-top: 0; }
+.rendered p { margin: 0 0 12px; }
+
+.rendered table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 8px 0;
+  font-size: 14px;
+}
+.rendered th, .rendered td {
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  text-align: left;
+}
+.rendered thead th {
+  background: #eef6f1;
+  color: var(--green-dark);
+  font-weight: 600;
+}
+.rendered tbody tr:nth-child(even) { background: #fafbfc; }
+.rendered code {
+  background: #eef1f4;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 90%;
+}
+
+.source {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.empty { color: var(--muted); text-align: center; padding: 40px 0; }
+
+.status {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 8px 20px 24px;
+  font-size: 13px;
+  color: var(--green-dark);
+  min-height: 16px;
+}

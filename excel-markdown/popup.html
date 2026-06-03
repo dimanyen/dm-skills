@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>表格轉 Markdown</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>表格轉 Markdown</h1>
+    <label class="toggle">
+      <input type="checkbox" id="headerToggle" checked />
+      <span>第一列為標題</span>
+    </label>
+  </header>
+
+  <main>
+    <div id="dropzone" class="dropzone" tabindex="0" contenteditable="true" spellcheck="false"
+         aria-label="貼上表格區">
+      <span class="placeholder">從 Excel / Google Sheets 複製表格後，按 <kbd>⌘/Ctrl + V</kbd> 貼上</span>
+    </div>
+
+    <section class="output-area">
+      <div class="output-head">
+        <span>Markdown 輸出</span>
+        <span id="dim" class="dim"></span>
+      </div>
+      <textarea id="output" spellcheck="false"
+                placeholder="轉換結果會顯示在這裡，可直接編輯。"></textarea>
+    </section>
+
+    <div class="actions">
+      <button id="copyBtn" class="btn primary" disabled>複製 Markdown</button>
+      <button id="downloadBtn" class="btn" disabled>下載 .md</button>
+      <button id="previewBtn" class="btn" disabled>開啟預覽</button>
+      <button id="clearBtn" class="btn ghost">清除</button>
+    </div>
+  </main>
+
+  <div id="status" class="status" role="status" aria-live="polite"></div>
+
+  <script src="converter.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

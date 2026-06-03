@@ -49,5 +49,6 @@ echo "打包擴充套件到 dist/ ..."
 pack "cb-overlay"                  "cb-overlay"      "README.md" "scripts/*" "icons/icon.svg"
 pack "chrome-ex-svgloader"         "svg-downloader"  "README.md"
 pack "learning-hard/elearn-helper" "elearn-helper"
+pack "excel-markdown"              "excel-markdown"  "README.md"
 
 echo "完成。"

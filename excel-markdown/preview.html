@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Markdown 預覽</title>
+  <link rel="stylesheet" href="preview.css" />
+</head>
+<body>
+  <header class="bar">
+    <h1>Markdown 預覽</h1>
+    <div class="bar-actions">
+      <div class="tabs">
+        <button id="tabRendered" class="tab active">渲染結果</button>
+        <button id="tabSource" class="tab">原始碼</button>
+      </div>
+      <button id="copyBtn" class="btn">複製</button>
+      <button id="downloadBtn" class="btn">下載 .md</button>
+    </div>
+  </header>
+
+  <main>
+    <article id="rendered" class="rendered"></article>
+    <pre id="source" class="source" hidden></pre>
+  </main>
+
+  <div id="status" class="status" role="status" aria-live="polite"></div>
+
+  <script src="markdown.js"></script>
+  <script src="preview.js"></script>
+</body>
+</html>

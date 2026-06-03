@@ -13,6 +13,7 @@
 - `cb-overlay/`
 - `chrome-ex-svgloader/`
 - `learning-hard/elearn-helper/`
+- `excel-markdown/`
 
 重新打包指令：
 

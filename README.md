@@ -53,6 +53,18 @@ Chrome 擴充套件（Manifest V3），SVG 下載器：
 
 詳細說明見 [chrome-ex-svgloader/README.md](chrome-ex-svgloader/README.md)。
 
+### [excel-markdown/](excel-markdown)
+
+Chrome 擴充套件（Manifest V3），表格轉 Markdown：
+
+- 從 Excel 或 Google Sheets 複製表格後，在套件視窗按 `⌘/Ctrl + V` 即轉成 Markdown 表格
+- 優先解析剪貼簿的 HTML 表格以保留欄列結構，找不到才退回 TSV / CSV 解析
+- 可切換「第一列為標題」，並一鍵複製、下載 `.md` 或開啟預覽分頁（渲染／原始碼切換）
+
+下載安裝包：[excel-markdown.zip](https://github.com/dimanyen/dm-skills/raw/master/dist/excel-markdown.zip)
+
+詳細說明見 [excel-markdown/README.md](excel-markdown/README.md)。
+
 ## 安裝 skill
 
 將 `.skill` 檔拖入 Claude Code，或使用 `skill-installer` skill 從此 repo 安裝。
@@ -66,6 +78,7 @@ Chrome 擴充套件（Manifest V3），SVG 下載器：
 | eLearning 輔助工具 | [elearn-helper.zip](https://github.com/dimanyen/dm-skills/raw/master/dist/elearn-helper.zip) |
 | 會議室查詢 Overlay | [cb-overlay.zip](https://github.com/dimanyen/dm-skills/raw/master/dist/cb-overlay.zip) |
 | SVG 下載器 | [svg-downloader.zip](https://github.com/dimanyen/dm-skills/raw/master/dist/svg-downloader.zip) |
+| 表格轉 Markdown | [excel-markdown.zip](https://github.com/dimanyen/dm-skills/raw/master/dist/excel-markdown.zip) |
 
 安裝步驟：
 
@@ -74,7 +87,7 @@ Chrome 擴充套件（Manifest V3），SVG 下載器：
 3. 啟用右上角「開發人員模式」。
 4. 點「載入未封裝項目」，選擇剛剛解壓出的資料夾即可。
 
-> 若要從原始碼安裝，可直接以「載入未封裝項目」選取 repo 內對應資料夾（[learning-hard/elearn-helper](learning-hard/elearn-helper)、[cb-overlay](cb-overlay)、[chrome-ex-svgloader](chrome-ex-svgloader)）。
+> 若要從原始碼安裝，可直接以「載入未封裝項目」選取 repo 內對應資料夾（[learning-hard/elearn-helper](learning-hard/elearn-helper)、[cb-overlay](cb-overlay)、[chrome-ex-svgloader](chrome-ex-svgloader)、[excel-markdown](excel-markdown)）。
 
 ## 重新打包擴充套件
 

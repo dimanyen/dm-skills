@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "表格轉 Markdown",
+  "version": "1.0.0",
+  "description": "把從 Excel 或 Google Sheets 複製的表格，一鍵轉成 Markdown，可預覽、下載與複製。",
+  "action": {
+    "default_title": "表格轉 Markdown",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["storage", "clipboardWrite"],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
