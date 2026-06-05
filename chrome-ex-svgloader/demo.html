@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SVG Downloader — Demo & Guide</title>
+<style>
+  :root {
+    --blue: #4A90D9;
+    --blue-dark: #357ABD;
+    --ink: #1f2933;
+    --muted: #6b7785;
+    --line: #e3e8ef;
+    --bg: #f5f7fa;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.45;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Hero */
+  header {
+    background: linear-gradient(135deg, #4A90D9 0%, #357ABD 100%);
+    color: #fff;
+    padding: 22px 32px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex: none;
+  }
+  .logo {
+    width: 56px; height: 56px; flex: none;
+    background: rgba(255,255,255,0.15);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  header h1 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.4px; }
+  header p { margin: 2px 0 0; font-size: 14px; opacity: 0.92; }
+  .badge {
+    margin-left: auto; flex: none;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    padding: 6px 14px; border-radius: 999px;
+    font-size: 12px; font-weight: 600;
+  }
+
+  /* Main grid fills remaining height */
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 24px;
+    padding: 24px 32px;
+    min-height: 0;
+  }
+  .panel-title {
+    font-size: 13px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.6px;
+    margin: 0 0 14px;
+  }
+
+  /* Steps column */
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step {
+    background: #fff; border: 1px solid var(--line);
+    border-radius: 12px; padding: 14px 16px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .step .ico {
+    width: 40px; height: 40px; flex: none;
+    background: #eef4fc; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--blue);
+  }
+  .step .ico svg { width: 22px; height: 22px; }
+  .step h3 { margin: 0 0 2px; font-size: 14px; }
+  .step p { margin: 0; font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+
+  .features { margin-top: 18px; display: flex; flex-direction: column; gap: 8px; }
+  .feature { display: flex; gap: 10px; align-items: center; font-size: 13px; color: var(--ink); }
+  .feature svg { width: 18px; height: 18px; flex: none; color: var(--blue); }
+
+  /* Icon gallery column */
+  .gallery { display: flex; flex-direction: column; min-height: 0; }
+  .grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 14px;
+    min-height: 0;
+  }
+  .card {
+    background: #fff; border: 1px solid var(--line);
+    border-radius: 14px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 8px;
+    transition: box-shadow .15s, transform .15s;
+  }
+  .card:hover { box-shadow: 0 8px 24px rgba(74,144,217,0.15); transform: translateY(-2px); }
+  .card svg { width: 46px; height: 46px; display: block; }
+  .card span { font-size: 12px; color: var(--muted); font-weight: 600; }
+
+  /* Screenshot mode (?shot=1): mimic the extension in action */
+  body.shot { padding-top: 38px; }
+  .shot-banner {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 2147483647;
+    background: #4A90D9; color: #fff; text-align: center;
+    padding: 10px 16px;
+    font: 600 14px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .shot-banner span { margin-left: 12px; font-weight: 400; opacity: 0.85; font-size: 12px; }
+  body.shot .shot-banner { display: block; }
+  body.shot #icon-home {
+    outline: 3px solid #4A90D9; outline-offset: 6px; border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="shot-banner">SVG Selection Mode<span>Click any SVG to download as PNG · Press Esc to exit</span></div>
+
+<header>
+  <div class="logo">
+    <svg id="logo-download" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="SVG Downloader logo">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/>
+      <line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+  </div>
+  <div>
+    <h1>SVG Downloader</h1>
+    <p>一鍵把任何網頁上的 SVG 圖示下載成 PNG 圖片</p>
+  </div>
+  <div class="badge">Manifest V3 · 免費開源</div>
+</header>
+
+<main>
+
+  <!-- Left: how to use -->
+  <div>
+    <p class="panel-title">三步驟使用</p>
+    <div class="steps">
+      <div class="step">
+        <div class="ico">
+          <svg id="step-cursor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="點擊擴充套件圖示">
+            <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="M13 13l6 6"/>
+          </svg>
+        </div>
+        <div>
+          <h3>1 · 點擊工具列圖示</h3>
+          <p>按下「Start SVG Selection Mode」，頁面頂端出現藍色橫幅。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="ico">
+          <svg id="step-hover" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="懸停在 SVG 上">
+            <rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9l6 6M15 9l-6 6"/>
+          </svg>
+        </div>
+        <div>
+          <h3>2 · 懸停選取目標</h3>
+          <p>游標移到 SVG 上會以藍色外框高亮，提示目前會抓哪一個。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="ico">
+          <svg id="step-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="點擊下載">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+          </svg>
+        </div>
+        <div>
+          <h3>3 · 點擊即下載 PNG</h3>
+          <p>點一下高亮的 SVG，以 2× 高解析轉成 PNG 下載。按 Esc 退出。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>2× 高解析度 PNG</span></div>
+      <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>支援 inline svg / img / object / embed</span></div>
+      <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>依元素 ID 自動命名檔案</span></div>
+      <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>純前端、不收集任何資料</span></div>
+    </div>
+  </div>
+
+  <!-- Right: icon gallery -->
+  <div class="gallery">
+    <p class="panel-title">試試看 — 選取下方任一圖示下載</p>
+    <div class="grid">
+
+      <div class="card">
+        <svg id="icon-home" viewBox="0 0 24 24" fill="none" stroke="#4A90D9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="home"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V9.5z"/></svg>
+        <span>home</span>
+      </div>
+      <div class="card">
+        <svg id="icon-heart" viewBox="0 0 24 24" fill="#E74C3C" stroke="none" aria-label="heart"><path d="M12 21s-7.5-4.6-10-9.1C.5 8.6 2 5 5.5 5 8 5 9.5 6.7 12 9c2.5-2.3 4-4 6.5-4C22 5 23.5 8.6 22 11.9 19.5 16.4 12 21 12 21z"/></svg>
+        <span>heart</span>
+      </div>
+      <div class="card">
+        <svg id="icon-star" viewBox="0 0 24 24" fill="#F5A623" stroke="none" aria-label="star"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+        <span>star</span>
+      </div>
+      <div class="card">
+        <svg id="icon-bell" viewBox="0 0 24 24" fill="none" stroke="#7B61FF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="bell"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        <span>bell</span>
+      </div>
+      <div class="card">
+        <svg id="icon-camera" viewBox="0 0 24 24" fill="none" stroke="#1f2933" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="camera"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span>camera</span>
+      </div>
+      <div class="card">
+        <svg id="icon-cloud" viewBox="0 0 24 24" fill="none" stroke="#4A90D9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="cloud"><path d="M18 10h-1.3A6 6 0 1 0 6 14"/><path d="M16 18a4 4 0 0 0 0-8"/><path d="M6 14a4 4 0 0 0 0 8h10"/></svg>
+        <span>cloud</span>
+      </div>
+      <div class="card">
+        <svg id="icon-rocket" viewBox="0 0 24 24" fill="none" stroke="#E74C3C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="rocket"><path d="M5 15c-1.5 1.5-2 5-2 5s3.5-.5 5-2c.8-.8.8-2.2 0-3s-2.2-.8-3 0z"/><path d="M9 12a12 12 0 0 1 8-9 12 12 0 0 1-1 8 6 6 0 0 1-3 3l-4-2z"/><circle cx="14.5" cy="8.5" r="1.5" fill="#E74C3C"/></svg>
+        <span>rocket</span>
+      </div>
+      <div class="card">
+        <svg id="icon-leaf" viewBox="0 0 24 24" fill="#27AE60" stroke="none" aria-label="leaf"><path d="M21 3c0 9-6 15-15 15-1 0-2-.1-3-.4C5 9 13 3 21 3z"/></svg>
+        <span>leaf</span>
+      </div>
+      <div class="card">
+        <svg id="icon-mail" viewBox="0 0 24 24" fill="none" stroke="#4A90D9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="mail"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        <span>mail</span>
+      </div>
+      <div class="card">
+        <svg id="icon-globe" viewBox="0 0 24 24" fill="none" stroke="#27AE60" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="globe"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg>
+        <span>globe</span>
+      </div>
+      <div class="card">
+        <svg id="icon-chart" viewBox="0 0 24 24" fill="none" stroke="#7B61FF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="chart"><line x1="4" y1="20" x2="20" y2="20"/><rect x="5" y="12" width="3" height="6" fill="#7B61FF"/><rect x="10.5" y="8" width="3" height="10" fill="#7B61FF"/><rect x="16" y="4" width="3" height="14" fill="#7B61FF"/></svg>
+        <span>chart</span>
+      </div>
+      <div class="card">
+        <svg id="icon-music" viewBox="0 0 24 24" fill="none" stroke="#E74C3C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="music"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>
+        <span>music</span>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<script>
+  if (new URLSearchParams(location.search).has('shot')) {
+    document.body.classList.add('shot');
+  }
+</script>
+</body>
+</html>
